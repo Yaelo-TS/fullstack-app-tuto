@@ -19,27 +19,15 @@ const MenuProps = {
   },
 };
 
-function getStyles(name, personName, theme) {
-  return {
-    fontWeight: personName.includes(name)
-      ? theme.typography.fontWeightMedium
-      : theme.typography.fontWeightRegular,
-  };
-}
-
-export default function MultiselectForm({ label, options }) {
+export default function MultiselectForm({
+  label,
+  options,
+  name,
+  onChange,
+  onBlur,
+  value,
+}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
 
   return (
     <div>
@@ -49,8 +37,10 @@ export default function MultiselectForm({ label, options }) {
           labelId="demo-multiple-chip-label"
           id="demo-multiple-chip"
           multiple
-          value={personName}
-          onChange={handleChange}
+          value={value}
+          name={name}
+          onChange={onChange}
+          onBlur={onBlur}
           input={<OutlinedInput id="select-multiple-chip" label={label} />}
           renderValue={(selected) => (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -65,11 +55,7 @@ export default function MultiselectForm({ label, options }) {
           MenuProps={MenuProps}
         >
           {options.map((option) => (
-            <MenuItem
-              key={option.id}
-              value={option.id}
-              style={getStyles(name, personName, theme)}
-            >
+            <MenuItem key={option.id} value={option.id}>
               {option.name}
             </MenuItem>
           ))}
